@@ -15,9 +15,9 @@ class UShapedNetwork(torch.nn.Module):
             output_dimension=time_dimension,
         )
 
-        self.enc1 = ConvolutionalBlock(in_channels, 64, time_dimension)
-        self.enc2 = ConvolutionalBlock(64, 128, time_dimension)
-        self.enc3 = ConvolutionalBlock(128, 256, time_dimension)  # Bottleneck layer
+        self.alpha = ConvolutionalBlock(in_channels, 64, time_dimension)
+        self.beta = ConvolutionalBlock(64, 128, time_dimension)
+        self.gamma = ConvolutionalBlock(128, 256, time_dimension)
         self.pool = torch.nn.MaxPool2d(2)
 
         self.up1 = torch.nn.ConvTranspose2d(256, 128, kernel_size=2, stride=2)
@@ -40,11 +40,11 @@ class UShapedNetwork(torch.nn.Module):
         time_embedding = self.time_network(time_embedding)
 
         # 2. Encoder (Save outputs for skip connections)
-        e1 = self.enc1(x, time_embedding)  # [B, 64, 28, 28]
-        e2 = self.enc2(self.pool(e1), time_embedding)  # [B, 128, 14, 14]
+        e1 = self.alpha(x, time_embedding)  # [B, 64, 28, 28]
+        e2 = self.beta(self.pool(e1), time_embedding)  # [B, 128, 14, 14]
 
         # 3. Bottleneck
-        b = self.enc3(self.pool(e2), time_embedding)  # [B, 256, 7, 7]
+        b = self.gamma(self.pool(e2), time_embedding)  # [B, 256, 7, 7]
 
         # 4. Decoder (Upsample and concatenate skip connections)
         d1 = self.up1(b)  # [B, 128, 14, 14]
