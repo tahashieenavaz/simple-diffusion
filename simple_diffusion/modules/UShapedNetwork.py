@@ -5,16 +5,14 @@ from .MLP import MLP
 
 
 class UShapedNetwork(torch.nn.Module):
-    def __init__(self, in_channels: int = 1, time_dimension: int = 128):
+    def __init__(self, in_channels: int, time_dimension: int):
         super().__init__()
         self.time_dimension = time_dimension
-
         self.time_network = MLP(
             input_dimension=time_dimension,
             hidden_dimension=time_dimension,
             output_dimension=time_dimension,
         )
-
         self.alpha = ConvolutionalBlock(in_channels, 64, time_dimension)
         self.beta = ConvolutionalBlock(64, 128, time_dimension)
         self.gamma = ConvolutionalBlock(128, 256, time_dimension)
