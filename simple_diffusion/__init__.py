@@ -1,2 +1,2 @@
-from .Diffusion import Diffusion
-from .Diffusion import Diffusion as MNISTDiffusion
+from .SimpleDiffusion import SimpleDiffusion
+from .SimpleDiffusion import SimpleDiffusion as Diffusion

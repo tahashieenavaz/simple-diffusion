@@ -2,7 +2,7 @@ from baloot import acceleration_device
 from simple_diffusion.constants import DatasetStringType
 
 
-class Diffusion:
+class SimpleDiffusion:
     def __init__(self):
         params = locals().pop("self")
         self.__set_parameters(params=params)
