@@ -16,11 +16,11 @@ class ConvolutionalBlock(torch.nn.Module):
             out_channels, out_channels, kernel_size=3, padding=1
         )
         self.activation = activation()
-        self.time_mlp = torch.nn.Linear(time_dimension, out_channels)
+        self.time_network = torch.nn.Linear(time_dimension, out_channels)
 
-    def forward(self, x: torch.Tensor, t: torch.Tensor) -> torch.Tensor:
+    def forward(self, x: torch.Tensor, time: torch.Tensor) -> torch.Tensor:
         x = self.activation(self.abel(x))
-        time_embedding = self.activation(self.time_mlp(t))
+        time_embedding = self.activation(self.time_network(time))
         time_embedding = time_embedding.view(
             time_embedding.size(0), time_embedding.size(1), 1, 1
         )
